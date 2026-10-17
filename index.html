@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17251f">
+<title>宝石工坊｜网页桌游</title>
+<style>
+:root{--bg:#f3efe5;--ink:#202b25;--green:#254b3a;--gold:#d5ad58;--paper:#fffdf7;--muted:#6e776f}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#fffaf0,var(--bg) 65%);color:var(--ink);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:var(--green);color:#fff8e8;padding:22px 16px 18px;text-align:center;border-bottom:4px solid var(--gold)}
+header .eyebrow{font-size:12px;letter-spacing:3px;opacity:.8}
+h1{font-size:clamp(25px,5vw,38px);margin:6px 0}
+header p{margin:0;color:#e2e8df;font-size:14px}
+main{max-width:1080px;margin:auto;padding:16px;display:grid;gap:16px}
+.panel{background:var(--paper);border:1px solid #e2ddcf;border-radius:18px;padding:16px;box-shadow:0 5px 18px #243a2810}
+.panel h2{font-size:18px;margin:0 0 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.small{font-size:12px;color:var(--muted);font-weight:500}
+.resources{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.resource{border-radius:12px;padding:10px 4px;text-align:center;background:#f3f0e7;border:1px solid #e7e0d0}
+.gem{display:block;font-size:24px;line-height:1.2}
+.resource strong{font-size:21px;display:block}
+.resource span:last-child{font-size:11px;color:var(--muted)}
+.gem-ruby{color:#c94e5b}.gem-sapphire{color:#4787c8}.gem-emerald{color:#398b65}.gem-onyx{color:#50545a}.gem-gold{color:#c49b32}
+.action-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button{font:inherit;border:0;border-radius:11px;padding:11px 14px;cursor:pointer;background:var(--green);color:white;font-weight:650;transition:transform .12s,opacity .12s}
+button:active{transform:scale(.98)}button:disabled{opacity:.35;cursor:not-allowed}
+button.secondary{background:#e9e5d9;color:var(--ink)}button.gold{background:#b88d35;color:white}
+.tier-title{display:flex;align-items:center;gap:8px;margin:16px 0 9px;font-weight:750}
+.tier-title:first-of-type{margin-top:0}
+.tier-dot{width:10px;height:10px;border-radius:50%;background:#78a18b}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.card{position:relative;border:1px solid #ded7c7;border-radius:13px;min-height:142px;padding:11px;background:linear-gradient(145deg,#fffef9,#f4f0e5);display:flex;flex-direction:column;gap:8px}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.card-art{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:#e8efe7}
+.points{font-size:12px;color:#916b20;font-weight:800}
+.cost{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto}
+.cost span{font-size:11px;padding:3px 5px;border-radius:6px;background:#eee9dc;white-space:nowrap}
+.card button{padding:8px 6px;font-size:12px;width:100%}
+.nobles{display:flex;gap:8px;overflow:auto;padding-bottom:4px}
+.noble{min-width:130px;flex:1;border:1px dashed #c7b78e;border-radius:12px;padding:12px;background:#fbf5e5}
+.noble .crown{font-size:22px}.noble strong{display:block;margin:3px 0}.noble small{color:var(--muted)}
+.status{padding:12px;border-radius:12px;background:#edf3ed;color:#284b38;font-size:14px;line-height:1.55}
+.log{max-height:130px;overflow:auto;font-size:12px;color:var(--muted);line-height:1.7}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:4px 16px 26px}
+@media(min-width:760px){main{grid-template-columns:1fr 1.35fr;align-items:start}.left-column{display:grid;gap:16px}.market-panel{grid-row:span 2}.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:430px){main{padding:10px;gap:10px}.panel{padding:12px;border-radius:15px}.resources{gap:5px}.resource{padding:8px 2px}.gem{font-size:21px}.resource strong{font-size:18px}.cards{gap:6px}.card{padding:8px;min-height:143px}.card-art{width:29px;height:29px;font-size:17px}.card button{font-size:11px}.cost span{font-size:10px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">A LITTLE STRATEGY GAME</div>
+  <h1>💎 宝石工坊</h1>
+  <p>收集宝石 · 建立商路 · 成为最耀眼的珠宝商</p>
+</header>
+<main>
+  <div class="left-column">
+    <section class="panel">
+      <h2>你的宝石 <span class="small">最多持有 10 枚</span></h2>
+      <div class="resources" id="resources"></div>
+      <div class="action-row">
+        <button id="takeBtn">领取宝石</button>
+        <button class="secondary" id="resetBtn">重新开始</button>
+      </div>
+      <p class="small">点击“领取宝石”会拿取三种不同颜色各 1 枚；如果宝石不足则自动跳过。</p>
+    </section>
+    <section class="panel">
+      <h2>贵族来访 <span class="small">达到条件即可获得 3 分</span></h2>
+      <div class="nobles" id="nobles"></div>
+    </section>
+    <section class="panel">
+      <h2>本局进度</h2>
+      <div class="status" id="status" aria-live="polite">欢迎来到宝石工坊！领取宝石，购买发展卡，累积 15 分获胜。</div>
+      <h2 style="margin-top:14px">行动记录</h2>
+      <div class="log" id="log">游戏已准备就绪。</div>
+    </section>
+  </div>
+  <section class="panel market-panel">
+    <h2>发展卡市场 <span class="small">购买卡牌可降低后续成本</span></h2>
+    <div id="market"></div>
+  </section>
+</main>
+<footer>宝石工坊 · 独立制作的学习版网页桌游。此版本为简化规则原型。</footer>
+<script>
+const COLORS = [
+ {id:'ruby',name:'红宝石',icon:'🔴',cls:'gem-ruby'},
+ {id:'sapphire',name:'蓝宝石',icon:'🔵',cls:'gem-sapphire'},
+ {id:'emerald',name:'绿宝石',icon:'🟢',cls:'gem-emerald'},
+ {id:'onyx',name:'黑玛瑙',icon:'⚫',cls:'gem-onyx'},
+ {id:'gold',name:'黄金',icon:'🟡',cls:'gem-gold'}
+];
+const COLOR_IDS = COLORS.map(c=>c.id);
+const ICONS = {ruby:'🔴',sapphire:'🔵',emerald:'🟢',onyx:'⚫',gold:'🟡'};
+const NAMES = Object.fromEntries(COLORS.map(c=>[c.id,c.name]));
+const CARD_SEEDS = [
+ ['ruby',0,{sapphire:1,emerald:1,onyx:1}],['sapphire',0,{ruby:1,emerald:2}],['emerald',0,{ruby:1,onyx:2}],
+ ['onyx',0,{sapphire:2,emerald:1}],['ruby',1,{sapphire:3,emerald:1,onyx:1}],['sapphire',1,{ruby:2,emerald:2,onyx:1}],
+ ['emerald',1,{ruby:2,sapphire:1,onyx:2}],['onyx',1,{ruby:1,sapphire:2,emerald:2}],['ruby',1,{sapphire:2,emerald:3}],
+ ['sapphire',2,{ruby:3,emerald:3,onyx:2}],['emerald',2,{ruby:3,sapphire:2,onyx:3}],['onyx',2,{ruby:2,sapphire:3,emerald:3}],
+ ['ruby',0,{sapphire:1,onyx:1}],['sapphire',0,{ruby:1,onyx:1}],['emerald',0,{ruby:2,sapphire:1}],
+ ['onyx',0,{emerald:1,sapphire:1}],['ruby',1,{emerald:2,onyx:2}],['sapphire',1,{ruby:2,onyx:2}],
+ ['emerald',1,{ruby:1,sapphire:3,onyx:1}],['onyx',1,{ruby:3,emerald:1,sapphire:1}],['ruby',2,{sapphire:4,emerald:2,onyx:1}],
+ ['sapphire',2,{ruby:2,emerald:4,onyx:1}],['emerald',2,{ruby:1,sapphire:2,onyx:4}],['onyx',2,{ruby:4,sapphire:1,emerald:2}]
+];
+const NOBLE_SEEDS = [
+ {name:'红宝石公爵',need:{ruby:3,sapphire:3,emerald:3}},
+ {name:'蓝宝石女侯',need:{sapphire:3,emerald:3,onyx:3}},
+ {name:'翡翠伯爵',need:{ruby:3,emerald:3,onyx:3}}
+];
+let state;
+function shuffled(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function newGame(){
+ const deck=shuffled(CARD_SEEDS.map((s,i)=>({id:i,color:s[0],points:s[1],cost:{...s[2]}})));
+ state={gems:{ruby:0,sapphire:0,emerald:0,onyx:0,gold:5},bonuses:{ruby:0,sapphire:0,emerald:0,onyx:0},points:0,owned:[],market:deck.slice(0,9),deck:deck.slice(9),nobles:shuffled(NOBLE_SEEDS).slice(0,3),turn:0,ended:false,log:['新游戏开始。欢迎来到宝石工坊！']};
+ render(); message('新游戏开始！先领取宝石，再购买发展卡。');
+}
+function totalGems(){return COLOR_IDS.reduce((n,c)=>n+state.gems[c],0);}
+function addLog(s){state.log.unshift(s);state.log=state.log.slice(0,20);}
+function message(s){document.getElementById('status').textContent=s;}
+function renderResources(){
+ document.getElementById('resources').innerHTML=COLORS.map(c=>`<div class="resource"><span class="gem ${c.cls}">${c.icon}</span><strong>${state.gems[c.id]}</strong><span>${c.name}${c.id!=='gold'?' · '+state.bonuses[c.id]+'张卡':''}</span></div>`).join('');
+ document.getElementById('takeBtn').disabled=state.ended;
+}
+function renderNobles(){
+ document.getElementById('nobles').innerHTML=state.nobles.map((n,i)=>`<div class="noble"><span class="crown">👑</span><strong>${n.name}</strong><small>需要：${Object.entries(n.need).map(([c,v])=>ICONS[c]+v).join(' ')}</small></div>`).join('')||'<p class="small">本局贵族已全部到访。</p>';
+}
+function affordable(card){
+ return COLOR_IDS.filter(c=>c!=='gold').every(c=>Math.max(0,(card.cost[c]||0)-state.bonuses[c])<=state.gems[c]) &&
+ COLOR_IDS.filter(c=>c!=='gold').reduce((sum,c)=>sum+Math.max(0,(card.cost[c]||0)-state.bonuses[c]),0)<=totalGems()-state.gems.gold;
+}
+function renderMarket(){
+ const market=document.getElementById('market');
+ market.innerHTML='';
+ for(let tier=0;tier<3;tier++){
+   const group=state.market.filter(c=>c.tier===tier);
+   const heading=document.createElement('div');heading.className='tier-title';heading.innerHTML=`<span class="tier-dot" style="background:${['#79a889','#7c9bc6','#c5a254'][tier]}"></span>${['初级发展卡','中级发展卡','高级发展卡'][tier]} <span class="small">· ${group.length} 张</span>`;
+   market.appendChild(heading);
+   const wrap=document.createElement('div');wrap.className='cards';
+   group.forEach(card=>{
+     const c=COLORS.find(x=>x.id===card.color);
+     const cost=Object.entries(card.cost).map(([id,v])=>`<span>${ICONS[id]} ${v}</span>`).join('');
+     const el=document.createElement('article');el.className='card';
+     el.innerHTML=`<div class="card-top"><div class="card-art">${c.icon}</div><span class="points">${card.points?`★ ${card.points} 分`:'发展卡'}</span></div><strong>${c.name}加成</strong><div class="cost">${cost||'<span>无需花费</span>'}</div><button ${state.ended||!affordable(card)?'disabled':''} data-buy="${card.id}">购买卡牌</button>`;
+     wrap.appendChild(el);
+   });
+   market.appendChild(wrap);
+ }
+ market.querySelectorAll('[data-buy]').forEach(btn=>btn.addEventListener('click',()=>buyCard(Number(btn.dataset.buy))));
+}
+function render(){
+ renderResources();renderNobles();renderMarket();
+ document.getElementById('log').innerHTML=state.log.map(s=>'• '+escapeHtml(s)).join('<br>');
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function takeGems(){
+ if(state.ended)return;
+ if(totalGems()>=10){message('你的宝石已经达到 10 枚，请先购买发展卡。');return;}
+ const available=shuffled(COLOR_IDS.filter(c=>c!=='gold'&&state.gems[c]<4)).slice(0,3);
+ if(!available.length){message('市场上暂时没有可领取的宝石。');return;}
+ available.forEach(c=>state.gems[c]++);
+ state.turn++;addLog('领取了 '+available.map(c=>NAMES[c]).join('、')+'。');
+ message('领取成功：'+available.map(c=>NAMES[c]).join('、')+'各 1 枚。');
+ render();
+}
+function buyCard(id){
+ if(state.ended)return;
+ const card=state.market.find(c=>c.id===id);if(!card||!affordable(card))return;
+ let remaining=state.gems.gold;
+ COLOR_IDS.filter(c=>c!=='gold').forEach(c=>{
+   const due=Math.max(0,(card.cost[c]||0)-state.bonuses[c]);
+   const paid=Math.min(due,state.gems[c]);state.gems[c]-=paid;remaining-=due-paid;
+ });
+ state.gems.gold=remaining;
+ state.bonuses[card.color]++;state.points+=card.points;state.owned.push(card);
+ state.market=state.market.filter(c=>c.id!==id);
+ if(state.deck.length)state.market.push(state.deck.shift());
+ state.turn++;addLog(`购买了${NAMES[card.color]}发展卡${card.points?'，获得 '+card.points+' 分':''}。`);
+ let visited=[];
+ state.nobles=state.nobles.filter(n=>{
+   const ok=Object.entries(n.need).every(([c,v])=>state.bonuses[c]>=v);
+   if(ok){state.points+=3;visited.push(n.name);return false;}return true;
+ });
+ if(visited.length)addLog('贵族来访：'+visited.join('、')+'，获得 3 分。');
+ if(state.points>=15){state.ended=true;message(`恭喜！你获得 ${state.points} 分，赢得本局！点击“重新开始”再玩一局。`);}
+ else message(`购买成功！当前 ${state.points} 分。${visited.length?'贵族来访并额外获得 3 分！':''}`);
+ render();
+}
+document.getElementById('takeBtn').addEventListener('click',takeGems);
+document.getElementById('resetBtn').addEventListener('click',()=>{if(confirm('确定重新开始这一局吗？'))newGame();});
+newGame();
+</script>
+</body>
+</html>
