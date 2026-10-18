@@ -1,194 +1,49 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#17251f">
-<title>宝石工坊｜网页桌游</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#17251f">
+<title>宝石工坊｜策略桌游</title>
 <style>
-:root{--bg:#f3efe5;--ink:#202b25;--green:#254b3a;--gold:#d5ad58;--paper:#fffdf7;--muted:#6e776f}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(circle at top,#fffaf0,var(--bg) 65%);color:var(--ink);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
-header{background:var(--green);color:#fff8e8;padding:22px 16px 18px;text-align:center;border-bottom:4px solid var(--gold)}
-header .eyebrow{font-size:12px;letter-spacing:3px;opacity:.8}
-h1{font-size:clamp(25px,5vw,38px);margin:6px 0}
-header p{margin:0;color:#e2e8df;font-size:14px}
-main{max-width:1080px;margin:auto;padding:16px;display:grid;gap:16px}
-.panel{background:var(--paper);border:1px solid #e2ddcf;border-radius:18px;padding:16px;box-shadow:0 5px 18px #243a2810}
-.panel h2{font-size:18px;margin:0 0 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.small{font-size:12px;color:var(--muted);font-weight:500}
-.resources{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
-.resource{border-radius:12px;padding:10px 4px;text-align:center;background:#f3f0e7;border:1px solid #e7e0d0}
-.gem{display:block;font-size:24px;line-height:1.2}
-.resource strong{font-size:21px;display:block}
-.resource span:last-child{font-size:11px;color:var(--muted)}
-.gem-ruby{color:#c94e5b}.gem-sapphire{color:#4787c8}.gem-emerald{color:#398b65}.gem-onyx{color:#50545a}.gem-gold{color:#c49b32}
-.action-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-button{font:inherit;border:0;border-radius:11px;padding:11px 14px;cursor:pointer;background:var(--green);color:white;font-weight:650;transition:transform .12s,opacity .12s}
-button:active{transform:scale(.98)}button:disabled{opacity:.35;cursor:not-allowed}
-button.secondary{background:#e9e5d9;color:var(--ink)}button.gold{background:#b88d35;color:white}
-.tier-title{display:flex;align-items:center;gap:8px;margin:16px 0 9px;font-weight:750}
-.tier-title:first-of-type{margin-top:0}
-.tier-dot{width:10px;height:10px;border-radius:50%;background:#78a18b}
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-.card{position:relative;border:1px solid #ded7c7;border-radius:13px;min-height:142px;padding:11px;background:linear-gradient(145deg,#fffef9,#f4f0e5);display:flex;flex-direction:column;gap:8px}
-.card-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
-.card-art{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:#e8efe7}
-.points{font-size:12px;color:#916b20;font-weight:800}
-.cost{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto}
-.cost span{font-size:11px;padding:3px 5px;border-radius:6px;background:#eee9dc;white-space:nowrap}
-.card button{padding:8px 6px;font-size:12px;width:100%}
-.nobles{display:flex;gap:8px;overflow:auto;padding-bottom:4px}
-.noble{min-width:130px;flex:1;border:1px dashed #c7b78e;border-radius:12px;padding:12px;background:#fbf5e5}
-.noble .crown{font-size:22px}.noble strong{display:block;margin:3px 0}.noble small{color:var(--muted)}
-.status{padding:12px;border-radius:12px;background:#edf3ed;color:#284b38;font-size:14px;line-height:1.55}
-.log{max-height:130px;overflow:auto;font-size:12px;color:var(--muted);line-height:1.7}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:4px 16px 26px}
-@media(min-width:760px){main{grid-template-columns:1fr 1.35fr;align-items:start}.left-column{display:grid;gap:16px}.market-panel{grid-row:span 2}.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:430px){main{padding:10px;gap:10px}.panel{padding:12px;border-radius:15px}.resources{gap:5px}.resource{padding:8px 2px}.gem{font-size:21px}.resource strong{font-size:18px}.cards{gap:6px}.card{padding:8px;min-height:143px}.card-art{width:29px;height:29px;font-size:17px}.card button{font-size:11px}.cost span{font-size:10px}}
-</style>
-</head>
-<body>
-<header>
-  <div class="eyebrow">A LITTLE STRATEGY GAME</div>
-  <h1>💎 宝石工坊</h1>
-  <p>收集宝石 · 建立商路 · 成为最耀眼的珠宝商</p>
-</header>
-<main>
-  <div class="left-column">
-    <section class="panel">
-      <h2>你的宝石 <span class="small">最多持有 10 枚</span></h2>
-      <div class="resources" id="resources"></div>
-      <div class="action-row">
-        <button id="takeBtn">领取宝石</button>
-        <button class="secondary" id="resetBtn">重新开始</button>
-      </div>
-      <p class="small">点击“领取宝石”会拿取三种不同颜色各 1 枚；如果宝石不足则自动跳过。</p>
-    </section>
-    <section class="panel">
-      <h2>贵族来访 <span class="small">达到条件即可获得 3 分</span></h2>
-      <div class="nobles" id="nobles"></div>
-    </section>
-    <section class="panel">
-      <h2>本局进度</h2>
-      <div class="status" id="status" aria-live="polite">欢迎来到宝石工坊！领取宝石，购买发展卡，累积 15 分获胜。</div>
-      <h2 style="margin-top:14px">行动记录</h2>
-      <div class="log" id="log">游戏已准备就绪。</div>
-    </section>
-  </div>
-  <section class="panel market-panel">
-    <h2>发展卡市场 <span class="small">购买卡牌可降低后续成本</span></h2>
-    <div id="market"></div>
-  </section>
-</main>
-<footer>宝石工坊 · 独立制作的学习版网页桌游。此版本为简化规则原型。</footer>
+:root{color-scheme:light;--ink:#202b25;--green:#254b3a;--gold:#c79b43;--paper:#fffdf7;--muted:#6e776f;--line:#e5dfd0}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#fffaf0,#f1ede3 65%);color:var(--ink);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}header{text-align:center;background:var(--green);color:#fff8e8;padding:22px 14px 18px;border-bottom:4px solid var(--gold)}header small{letter-spacing:3px;opacity:.8}h1{font-size:clamp(27px,5vw,40px);margin:5px 0}header p{margin:0;color:#e2e8df;font-size:14px}main{max-width:1120px;margin:auto;padding:16px;display:grid;gap:14px}.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.modes{display:flex;gap:7px;flex-wrap:wrap}.panel{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:0 5px 18px #243a2810}.panel h2{font-size:17px;margin:0 0 12px;display:flex;justify-content:space-between;gap:8px}.small{font-size:12px;color:var(--muted);font-weight:500}button,input{font:inherit}button{border:0;border-radius:10px;padding:10px 13px;background:var(--green);color:white;font-weight:700;cursor:pointer}button:disabled{opacity:.38;cursor:not-allowed}button.secondary{background:#e9e5d9;color:var(--ink)}button.gold{background:#b88d35}.layout{display:grid;gap:14px}.left{display:grid;gap:14px}.resources{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.resource{text-align:center;border-radius:11px;padding:8px 3px;background:#f3f0e7;border:1px solid #e7e0d0}.resource i{display:block;font-style:normal;font-size:21px}.resource b{display:block;font-size:21px}.resource small{font-size:10px;color:var(--muted)}.players{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.player{border:1px solid var(--line);border-radius:12px;padding:11px}.player.active{outline:2px solid #76a184;background:#f4f8f1}.player h3{margin:0 0 5px;font-size:14px}.player p{margin:2px 0;font-size:12px;color:var(--muted)}.tier-title{display:flex;align-items:center;gap:8px;margin:14px 0 8px;font-weight:750}.tier-dot{width:9px;height:9px;border-radius:50%}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.card{min-height:139px;border:1px solid #ded7c7;border-radius:12px;padding:9px;background:linear-gradient(145deg,#fffef9,#f4f0e5);display:flex;flex-direction:column;gap:7px}.card-top{display:flex;align-items:center;justify-content:space-between}.card-art{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:#e8efe7;font-size:17px}.points{font-size:11px;color:#916b20;font-weight:800}.cost{display:flex;gap:4px;flex-wrap:wrap;margin-top:auto}.cost span{font-size:10px;padding:3px 4px;border-radius:5px;background:#eee9dc;white-space:nowrap}.card button{padding:7px 4px;font-size:11px}.nobles{display:flex;gap:8px;overflow:auto}.noble{min-width:128px;border:1px dashed #c7b78e;border-radius:11px;padding:9px;background:#fbf5e5}.noble strong{display:block;font-size:13px}.noble small{color:var(--muted)}.status{padding:11px;border-radius:11px;background:#edf3ed;color:#284b38;font-size:13px;line-height:1.5;min-height:42px}.action-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.log{max-height:120px;overflow:auto;font-size:12px;color:var(--muted);line-height:1.7}.online{display:grid;gap:8px}.online input{min-width:0;width:100%;border:1px solid var(--line);border-radius:9px;padding:10px}.hidden{display:none!important}footer{text-align:center;color:var(--muted);font-size:11px;padding:0 12px 24px}@media(min-width:800px){main{padding:20px}.layout{grid-template-columns:.9fr 1.4fr;align-items:start}.market{grid-row:span 2}.left{grid-template-columns:1fr 1fr}.left .score,.left .activity{grid-column:span 2}}@media(max-width:430px){main{padding:9px}.panel{padding:11px}.cards{gap:5px}.card{padding:7px;min-height:140px}.card button{font-size:10px}.players{gap:5px}}
+</style></head>
+<body><header><small>A LITTLE STRATEGY GAME</small><h1>💎 宝石工坊</h1><p>收集宝石 · 建立商路 · 邀请好友一起成为珠宝商</p></header>
+<main><div class="bar"><div class="modes"><button data-mode="cpu">🤖 电脑对战</button><button class="secondary" data-mode="local">👥 本地双人</button><button class="secondary" data-mode="online">🌐 好友联机</button></div><button id="reset" class="secondary">重新开始</button></div>
+<section id="onlinePanel" class="panel online hidden"><h2>好友联机 <span class="small">需要 Supabase 免费项目（设置见 README）</span></h2><p class="small">填写项目网址和 anon/public key；这是公开客户端密钥，可放在网页中。绝不要填写 service_role 密钥。</p><input id="supUrl" placeholder="Supabase Project URL，例如 https://xxxx.supabase.co"><input id="supKey" placeholder="Supabase anon / publishable key"><div class="action-row"><button id="saveConfig">保存连接设置</button><input id="roomCode" maxlength="8" placeholder="房间码（留空自动生成）" style="width:190px"><button id="createRoom" class="gold">创建房间</button><button id="joinRoom" class="secondary">加入房间</button></div><div class="small" id="onlineStatus">联机尚未连接。</div></section>
+<div class="layout"><div class="left"><section class="panel"><h2>你的宝石 <span class="small">最多持有 10 枚</span></h2><div id="resources" class="resources"></div><div class="action-row"><button id="take">领取宝石</button></div><p class="small">可拿 3 种不同颜色各 1 枚，或拿 2 枚同色（该色供应至少 4 枚）。超出 10 枚时须归还。</p></section>
+<section class="panel"><h2>贵族来访 <span class="small">符合条件自动获得 3 分</span></h2><div id="nobles" class="nobles"></div></section><section class="panel score"><h2>对战情况</h2><div id="players" class="players"></div><div class="status" id="status" aria-live="polite"></div></section><section class="panel activity"><h2>行动记录</h2><div id="log" class="log"></div></section></div>
+<section class="panel market"><h2>发展卡市场 <span class="small">卡牌提供永久折扣</span></h2><div id="market"></div></section></div></main><footer>宝石工坊 · 独立制作的 Splendor 风格网页桌游</footer>
 <script>
-const COLORS = [
- {id:'ruby',name:'红宝石',icon:'🔴',cls:'gem-ruby'},
- {id:'sapphire',name:'蓝宝石',icon:'🔵',cls:'gem-sapphire'},
- {id:'emerald',name:'绿宝石',icon:'🟢',cls:'gem-emerald'},
- {id:'onyx',name:'黑玛瑙',icon:'⚫',cls:'gem-onyx'},
- {id:'gold',name:'黄金',icon:'🟡',cls:'gem-gold'}
-];
-const COLOR_IDS = COLORS.map(c=>c.id);
-const ICONS = {ruby:'🔴',sapphire:'🔵',emerald:'🟢',onyx:'⚫',gold:'🟡'};
-const NAMES = Object.fromEntries(COLORS.map(c=>[c.id,c.name]));
-const CARD_SEEDS = [
- ['ruby',0,{sapphire:1,emerald:1,onyx:1}],['sapphire',0,{ruby:1,emerald:2}],['emerald',0,{ruby:1,onyx:2}],
- ['onyx',0,{sapphire:2,emerald:1}],['ruby',1,{sapphire:3,emerald:1,onyx:1}],['sapphire',1,{ruby:2,emerald:2,onyx:1}],
- ['emerald',1,{ruby:2,sapphire:1,onyx:2}],['onyx',1,{ruby:1,sapphire:2,emerald:2}],['ruby',1,{sapphire:2,emerald:3}],
- ['sapphire',2,{ruby:3,emerald:3,onyx:2}],['emerald',2,{ruby:3,sapphire:2,onyx:3}],['onyx',2,{ruby:2,sapphire:3,emerald:3}],
- ['ruby',0,{sapphire:1,onyx:1}],['sapphire',0,{ruby:1,onyx:1}],['emerald',0,{ruby:2,sapphire:1}],
- ['onyx',0,{emerald:1,sapphire:1}],['ruby',1,{emerald:2,onyx:2}],['sapphire',1,{ruby:2,onyx:2}],
- ['emerald',1,{ruby:1,sapphire:3,onyx:1}],['onyx',1,{ruby:3,emerald:1,sapphire:1}],['ruby',2,{sapphire:4,emerald:2,onyx:1}],
- ['sapphire',2,{ruby:2,emerald:4,onyx:1}],['emerald',2,{ruby:1,sapphire:2,onyx:4}],['onyx',2,{ruby:4,sapphire:1,emerald:2}]
-];
-const NOBLE_SEEDS = [
- {name:'红宝石公爵',need:{ruby:3,sapphire:3,emerald:3}},
- {name:'蓝宝石女侯',need:{sapphire:3,emerald:3,onyx:3}},
- {name:'翡翠伯爵',need:{ruby:3,emerald:3,onyx:3}}
-];
-let state;
-function shuffled(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function newGame(){
- const deck=shuffled(CARD_SEEDS.map((s,i)=>({id:i,color:s[0],points:s[1],cost:{...s[2]}})));
- state={gems:{ruby:0,sapphire:0,emerald:0,onyx:0,gold:5},bonuses:{ruby:0,sapphire:0,emerald:0,onyx:0},points:0,owned:[],market:deck.slice(0,9),deck:deck.slice(9),nobles:shuffled(NOBLE_SEEDS).slice(0,3),turn:0,ended:false,log:['新游戏开始。欢迎来到宝石工坊！']};
- render(); message('新游戏开始！先领取宝石，再购买发展卡。');
-}
-function totalGems(){return COLOR_IDS.reduce((n,c)=>n+state.gems[c],0);}
-function addLog(s){state.log.unshift(s);state.log=state.log.slice(0,20);}
-function message(s){document.getElementById('status').textContent=s;}
-function renderResources(){
- document.getElementById('resources').innerHTML=COLORS.map(c=>`<div class="resource"><span class="gem ${c.cls}">${c.icon}</span><strong>${state.gems[c.id]}</strong><span>${c.name}${c.id!=='gold'?' · '+state.bonuses[c.id]+'张卡':''}</span></div>`).join('');
- document.getElementById('takeBtn').disabled=state.ended;
-}
-function renderNobles(){
- document.getElementById('nobles').innerHTML=state.nobles.map((n,i)=>`<div class="noble"><span class="crown">👑</span><strong>${n.name}</strong><small>需要：${Object.entries(n.need).map(([c,v])=>ICONS[c]+v).join(' ')}</small></div>`).join('')||'<p class="small">本局贵族已全部到访。</p>';
-}
-function affordable(card){
- return COLOR_IDS.filter(c=>c!=='gold').every(c=>Math.max(0,(card.cost[c]||0)-state.bonuses[c])<=state.gems[c]) &&
- COLOR_IDS.filter(c=>c!=='gold').reduce((sum,c)=>sum+Math.max(0,(card.cost[c]||0)-state.bonuses[c]),0)<=totalGems()-state.gems.gold;
-}
-function renderMarket(){
- const market=document.getElementById('market');
- market.innerHTML='';
- for(let tier=0;tier<3;tier++){
-   const group=state.market.filter(c=>c.tier===tier);
-   const heading=document.createElement('div');heading.className='tier-title';heading.innerHTML=`<span class="tier-dot" style="background:${['#79a889','#7c9bc6','#c5a254'][tier]}"></span>${['初级发展卡','中级发展卡','高级发展卡'][tier]} <span class="small">· ${group.length} 张</span>`;
-   market.appendChild(heading);
-   const wrap=document.createElement('div');wrap.className='cards';
-   group.forEach(card=>{
-     const c=COLORS.find(x=>x.id===card.color);
-     const cost=Object.entries(card.cost).map(([id,v])=>`<span>${ICONS[id]} ${v}</span>`).join('');
-     const el=document.createElement('article');el.className='card';
-     el.innerHTML=`<div class="card-top"><div class="card-art">${c.icon}</div><span class="points">${card.points?`★ ${card.points} 分`:'发展卡'}</span></div><strong>${c.name}加成</strong><div class="cost">${cost||'<span>无需花费</span>'}</div><button ${state.ended||!affordable(card)?'disabled':''} data-buy="${card.id}">购买卡牌</button>`;
-     wrap.appendChild(el);
-   });
-   market.appendChild(wrap);
- }
- market.querySelectorAll('[data-buy]').forEach(btn=>btn.addEventListener('click',()=>buyCard(Number(btn.dataset.buy))));
-}
-function render(){
- renderResources();renderNobles();renderMarket();
- document.getElementById('log').innerHTML=state.log.map(s=>'• '+escapeHtml(s)).join('<br>');
-}
-function escapeHtml(s){return s.replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
-function takeGems(){
- if(state.ended)return;
- if(totalGems()>=10){message('你的宝石已经达到 10 枚，请先购买发展卡。');return;}
- const available=shuffled(COLOR_IDS.filter(c=>c!=='gold'&&state.gems[c]<4)).slice(0,3);
- if(!available.length){message('市场上暂时没有可领取的宝石。');return;}
- available.forEach(c=>state.gems[c]++);
- state.turn++;addLog('领取了 '+available.map(c=>NAMES[c]).join('、')+'。');
- message('领取成功：'+available.map(c=>NAMES[c]).join('、')+'各 1 枚。');
- render();
-}
-function buyCard(id){
- if(state.ended)return;
- const card=state.market.find(c=>c.id===id);if(!card||!affordable(card))return;
- let remaining=state.gems.gold;
- COLOR_IDS.filter(c=>c!=='gold').forEach(c=>{
-   const due=Math.max(0,(card.cost[c]||0)-state.bonuses[c]);
-   const paid=Math.min(due,state.gems[c]);state.gems[c]-=paid;remaining-=due-paid;
- });
- state.gems.gold=remaining;
- state.bonuses[card.color]++;state.points+=card.points;state.owned.push(card);
- state.market=state.market.filter(c=>c.id!==id);
- if(state.deck.length)state.market.push(state.deck.shift());
- state.turn++;addLog(`购买了${NAMES[card.color]}发展卡${card.points?'，获得 '+card.points+' 分':''}。`);
- let visited=[];
- state.nobles=state.nobles.filter(n=>{
-   const ok=Object.entries(n.need).every(([c,v])=>state.bonuses[c]>=v);
-   if(ok){state.points+=3;visited.push(n.name);return false;}return true;
- });
- if(visited.length)addLog('贵族来访：'+visited.join('、')+'，获得 3 分。');
- if(state.points>=15){state.ended=true;message(`恭喜！你获得 ${state.points} 分，赢得本局！点击“重新开始”再玩一局。`);}
- else message(`购买成功！当前 ${state.points} 分。${visited.length?'贵族来访并额外获得 3 分！':''}`);
- render();
-}
-document.getElementById('takeBtn').addEventListener('click',takeGems);
-document.getElementById('resetBtn').addEventListener('click',()=>{if(confirm('确定重新开始这一局吗？'))newGame();});
-newGame();
-</script>
-</body>
-</html>
+const C=[['ruby','红宝石','🔴'],['sapphire','蓝宝石','🔵'],['emerald','绿宝石','🟢'],['onyx','黑玛瑙','⚫'],['gold','黄金','🟡']], IDS=C.map(x=>x[0]), ICON=Object.fromEntries(C.map(x=>[x[0],x[2]])), NAME=Object.fromEntries(C.map(x=>[x[0],x[1]])), NON=IDS.slice(0,4);
+const SEEDS=[['ruby',0,{sapphire:1,emerald:1,onyx:1}],['sapphire',0,{ruby:1,emerald:2}],['emerald',0,{ruby:1,onyx:2}],['onyx',0,{sapphire:2,emerald:1}],['ruby',1,{sapphire:3,emerald:1,onyx:1}],['sapphire',1,{ruby:2,emerald:2,onyx:1}],['emerald',1,{ruby:2,sapphire:1,onyx:2}],['onyx',1,{ruby:1,sapphire:2,emerald:2}],['ruby',1,{sapphire:2,emerald:3}],['sapphire',2,{ruby:3,emerald:3,onyx:2}],['emerald',2,{ruby:3,sapphire:2,onyx:3}],['onyx',2,{ruby:2,sapphire:3,emerald:3}],['ruby',0,{sapphire:1,onyx:1}],['sapphire',0,{ruby:1,onyx:1}],['emerald',0,{ruby:2,sapphire:1}],['onyx',0,{emerald:1,sapphire:1}],['ruby',1,{emerald:2,onyx:2}],['sapphire',1,{ruby:2,onyx:2}],['emerald',1,{ruby:1,sapphire:3,onyx:1}],['onyx',1,{ruby:3,emerald:1,sapphire:1}],['ruby',2,{sapphire:4,emerald:2,onyx:1}],['sapphire',2,{ruby:2,emerald:4,onyx:1}],['emerald',2,{ruby:1,sapphire:2,onyx:4}],['onyx',2,{ruby:4,sapphire:1,emerald:2}]];
+const NOBLES=[{name:'红宝石公爵',need:{ruby:3,sapphire:3,emerald:3}},{name:'蓝宝石女侯',need:{sapphire:3,emerald:3,onyx:3}},{name:'翡翠伯爵',need:{ruby:3,emerald:3,onyx:3}},{name:'黑玛瑙男爵',need:{ruby:4,sapphire:4,onyx:3}},{name:'黄金夫人',need:{sapphire:4,emerald:4,onyx:3}}];
+let game, mode='cpu', supabase=null, channel=null, role='host', room='', applyingRemote=false;
+function shuffle(a){a=[...a];for(let i=a.length-1;i;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function fresh(){let deck=shuffle(SEEDS.map((s,i)=>({id:i,color:s[0],tier:s[1],points:s[1],cost:{...s[2]}})));game={players:[player('你'),player(mode==='cpu'?'电脑':'玩家 2')],active:0,market:deck.slice(0,12),deck:deck.slice(12),nobles:shuffle(NOBLES).slice(0,Math.random()<.5?3:4),ended:false,log:['新游戏开始。']};render();say(mode==='cpu'?'轮到你行动。先拿宝石或购买发展卡。':mode==='local'?'本地双人：轮流操作，点击按钮执行当前玩家的行动。':'联机房间准备就绪。')}
+function player(name){return {name,gems:{ruby:0,sapphire:0,emerald:0,onyx:0,gold:0},bonus:{ruby:0,sapphire:0,emerald:0,onyx:0},points:0}}
+function say(s){document.querySelector('#status').textContent=s}function log(s){game.log.unshift(s);game.log=game.log.slice(0,12)}function total(p){return IDS.reduce((n,c)=>n+p.gems[c],0)}function cur(){return game.players[game.active]}
+function costLeft(card,p,c){return Math.max(0,(card.cost[c]||0)-p.bonus[c])}function affordable(card,p){return NON.every(c=>costLeft(card,p,c)<=p.gems[c])&&NON.reduce((n,c)=>n+Math.max(0,costLeft(card,p,c)-p.gems[c]),0)<=p.gems.gold}
+function render(){renderPlayers();renderResources();renderNobles();renderMarket();document.querySelector('#log').innerHTML=game.log.map(x=>'• '+esc(x)).join('<br>');document.querySelector('#take').disabled=game.ended||localBlocked();document.querySelectorAll('[data-mode]').forEach(b=>b.className=b.dataset.mode===mode?'':'secondary')}
+function localBlocked(){return mode==='online'&&((role==='host'&&game.active!==0)||(role==='guest'&&game.active!==1))}
+function renderPlayers(){document.querySelector('#players').innerHTML=game.players.map((p,i)=>`<div class="player ${game.active===i&&!game.ended?'active':''}"><h3>${esc(p.name)}${game.active===i&&!game.ended?' · 行动中':''}</h3><p>🏆 ${p.points} 分　🃏 ${p.bonus.ruby+p.bonus.sapphire+p.bonus.emerald+p.bonus.onyx} 张发展卡</p><p>🔴${p.gems.ruby} 🔵${p.gems.sapphire} 🟢${p.gems.emerald} ⚫${p.gems.onyx} 🟡${p.gems.gold}</p></div>`).join('')}
+function renderResources(){let p=cur();document.querySelector('#resources').innerHTML=C.map(([id,n,ic])=>`<div class="resource"><i>${ic}</i><b>${p.gems[id]}</b><small>${n}${id!=='gold'?' · '+p.bonus[id]+'折扣':''}</small></div>`).join('')}
+function renderNobles(){document.querySelector('#nobles').innerHTML=game.nobles.map(n=>`<div class="noble"><strong>👑 ${n.name}</strong><small>需要 ${Object.entries(n.need).map(([c,v])=>ICON[c]+v).join(' ')}</small></div>`).join('')||'<span class="small">贵族已全部到访。</span>'}
+function renderMarket(){let root=document.querySelector('#market');root.innerHTML='';for(let t=0;t<3;t++){let cards=game.market.filter(c=>c.tier===t);let h=document.createElement('div');h.className='tier-title';h.innerHTML=`<span class="tier-dot" style="background:${['#79a889','#7c9bc6','#c5a254'][t]}"></span>${['初级发展卡','中级发展卡','高级发展卡'][t]} <span class="small">· ${cards.length} 张</span>`;root.append(h);let w=document.createElement('div');w.className='cards';for(let card of cards){let el=document.createElement('article');el.className='card';el.innerHTML=`<div class="card-top"><div class="card-art">${ICON[card.color]}</div><span class="points">${card.points?'★ '+card.points+' 分':'发展卡'}</span></div><strong>${NAME[card.color]}加成</strong><div class="cost">${Object.entries(card.cost).map(([c,v])=>`<span>${ICON[c]} ${v}</span>`).join('')}</div><button data-buy="${card.id}" ${game.ended||localBlocked()||!affordable(card,cur())?'disabled':''}>购买</button>`;w.append(el)}root.append(w)}root.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>act('buy',Number(b.dataset.buy)))}
+function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function act(type,arg,remote=false){if(game.ended||(!remote&&localBlocked()))return;if(mode==='online'&&role==='guest'&&!remote){channel?.send({type:'broadcast',event:'action',payload:{action:type,id:arg,color:arg}});say('已发送行动请求，等待房主确认。');return}const p=cur();if(type==='take'){let available=shuffle(NON.filter(c=>gemBank(c)>0));let colors=available.slice(0,3);if(colors.length<3){say('可领取的不同颜色宝石不足 3 种。');return}colors.forEach(c=>{p.gems[c]++;bank[c]--});finishTurn('拿取了三种不同颜色宝石。')}
+else if(type==='pair'){let c=arg;if(gemBank(c)<4){say('该颜色供应不足 4 枚，不能拿两枚。');return}p.gems[c]+=2;bank[c]-=2;finishTurn('拿取了两枚'+NAME[c]+'。')}
+else if(type==='buy'){let card=game.market.find(x=>x.id===arg);if(!card||!affordable(card,p))return;let gold=0;for(let c of NON){let due=costLeft(card,p,c),paid=Math.min(due,p.gems[c]);p.gems[c]-=paid;bank[c]+=paid;gold+=due-paid}p.gems.gold-=gold;bank.gold+=gold;p.bonus[card.color]++;p.points+=card.points;game.market=game.market.filter(x=>x.id!==arg);if(game.deck.length)game.market.push(game.deck.shift());finishTurn('购买了'+NAME[card.color]+'发展卡'+(card.points?'，获得 '+card.points+' 分':''))}
+else if(type==='return'){if(p.gems[arg]<1)return;p.gems[arg]--;bank[arg]++;if(total(p)<=10)finishTurn('归还了一枚宝石。');else render()}}
+let bank={ruby:4,sapphire:4,emerald:4,onyx:4,gold:5};function gemBank(c){return bank[c]}
+function finishTurn(note){if(total(cur())>10){game.pendingNote=note;render();say('宝石超过 10 枚，请点击宝石歸還，直到剩余 10 枚。');return}let p=cur();log(p.name+note);let visited=[];game.nobles=game.nobles.filter(n=>{if(NON.every(c=>p.bonus[c]>=n.need[c]||!n.need[c])){p.points+=3;visited.push(n.name);return false}return true});if(visited.length)log('贵族来访：'+visited.join('、')+'（+3 分）');if(p.points>=15){game.ended=true;log(p.name+'达到 15 分！')}game.active=1-game.active;render();say(game.ended?p.name+'赢得本局！点击重新开始再玩一局。':`行动完成。现在轮到${cur().name}。`);publish();if(mode==='cpu'&&game.active===1&&!game.ended)setTimeout(cpuTurn,550)}
+function returnUI(){if(total(cur())<=10)return '';return IDS.filter(c=>cur().gems[c]>0).map(c=>`<button class="secondary" data-return="${c}">归还 ${ICON[c]}</button>`).join('')}
+function render(){renderPlayers();renderResources();renderNobles();renderMarket();document.querySelector('#log').innerHTML=game.log.map(x=>'• '+esc(x)).join('<br>');document.querySelector('#take').disabled=game.ended||localBlocked();document.querySelectorAll('[data-mode]').forEach(b=>b.className=b.dataset.mode===mode?'':'secondary');let extras=returnUI();document.querySelector('#take').parentElement.querySelectorAll('[data-return]').forEach(x=>x.remove());if(extras)document.querySelector('#take').insertAdjacentHTML('afterend',extras);document.querySelectorAll('[data-return]').forEach(b=>b.onclick=()=>act('return',b.dataset.return));}
+function cpuTurn(){if(game.ended||game.active!==1)return;let p=cur(),cards=game.market.filter(c=>affordable(c,p)).sort((a,b)=>b.points-a.points);if(cards.length){act('buy',cards[0].id);return}let target=game.market.map(c=>({c,need:NON.filter(k=>costLeft(c,p,k)>p.gems[k]).sort((a,b)=>costLeft(c,p,b)-p.gems[b])})).sort((a,b)=>a.need.length-b.need.length)[0];let picks=target?target.need.slice(0,3):[];picks=picks.filter(c=>gemBank(c)>0);if(picks.length<3)picks=[...picks,...shuffle(NON.filter(c=>gemBank(c)>0&&!picks.includes(c)))].slice(0,3);if(picks.length){picks.forEach(c=>{p.gems[c]++;bank[c]--});finishTurn('拿取了宝石。')}else{say('电脑没有合法行动；点击重新开始。')}}
+document.querySelector('#take').onclick=()=>act('take');document.querySelector('#take').insertAdjacentHTML('afterend',`<div id="pairs" class="action-row"></div>`);document.querySelector('#pairs').innerHTML=NON.map(c=>`<button class="secondary" data-pair="${c}">拿 2 ${ICON[c]}</button>`).join('');document.querySelectorAll('[data-pair]').forEach(b=>b.onclick=()=>act('pair',b.dataset.pair));document.querySelector('#reset').onclick=()=>fresh();document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelector('#onlinePanel').classList.toggle('hidden',mode!=='online');disconnect();fresh()});
+function config(){return {url:document.querySelector('#supUrl').value.trim(),key:document.querySelector('#supKey').value.trim()}}function saveConfig(){let x=config();localStorage.setItem('gemSupabase',JSON.stringify(x));status('连接设置已保存在此浏览器。')}function status(s){document.querySelector('#onlineStatus').textContent=s}
+document.querySelector('#saveConfig').onclick=saveConfig;try{let x=JSON.parse(localStorage.getItem('gemSupabase')||'{}');document.querySelector('#supUrl').value=x.url||'';document.querySelector('#supKey').value=x.key||''}catch{}
+async function connect(code,host){let cfg=config();if(!cfg.url||!cfg.key){status('请先填写 Supabase URL 和 anon/public key。');return}if(!window.supabase){await new Promise((resolve,reject)=>{let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';s.onload=resolve;s.onerror=reject;document.head.append(s)});}supabase=window.supabase.createClient(cfg.url,cfg.key);room=code;role=host?'host':'guest';if(host){mode='online';fresh();}channel=supabase.channel('gem-room-'+room,{config:{broadcast:{self:false}}});channel.on('broadcast',{event:'state'},({payload})=>{if(role==='guest'&&payload.state){applyingRemote=true;game=payload.state;bank=payload.bank;render();say('已同步房间状态。');applyingRemote=false}}).on('broadcast',{event:'action'},({payload})=>{if(role==='host'&&payload.action){if(payload.action==='take')act('take',null,true);else if(payload.action==='buy')act('buy',payload.id,true);else if(payload.action==='pair')act('pair',payload.color,true)}}).subscribe(async st=>{if(st==='SUBSCRIBED'){if(host)publish();else status('已加入房间 '+room+'。等待房主同步。')}});status((host?'房间已创建：':'正在加入：')+room+'。把房间码分享给朋友。')}
+function publish(){if(channel&&!applyingRemote&&role==='host')channel.send({type:'broadcast',event:'state',payload:{state:game,bank}})}function disconnect(){if(channel&&supabase)supabase.removeChannel(channel);channel=null;supabase=null}
+document.querySelector('#createRoom').onclick=()=>{let code=(document.querySelector('#roomCode').value||Math.random().toString(36).slice(2,8)).toUpperCase();document.querySelector('#roomCode').value=code;saveConfig();connect(code,true)};document.querySelector('#joinRoom').onclick=()=>{let code=document.querySelector('#roomCode').value.trim().toUpperCase();if(!code){status('输入朋友分享的房间码。');return}saveConfig();connect(code,false)};
+fresh();
+</script></body></html>
+
