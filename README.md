@@ -1,6 +1,6 @@
 # 宝石工坊
 
-GitHub Pages 单页桌游，支持电脑对战、本地轮流双人和通过 Supabase Realtime 房间联机。仓库默认分支 `main` 是已发布稳定版；本次更新请先在 `codex/gem-game-upgrade` 分支预览，再通过 Pull Request 合并。
+GitHub Pages 单页桌游，支持电脑对战、本地轮流双人和通过 Supabase Realtime 房间联机。桌面及手机横屏采用横向桌游桌布局；手机竖屏仍可纵向滚动。仓库默认分支 `main` 是已发布稳定版；本次更新请先在 `codex/gem-game-upgrade` 分支预览，再通过 Pull Request 合并。
 
 ## 游戏规则（简化版）
 
