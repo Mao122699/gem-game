@@ -170,6 +170,34 @@ footer{text-align:center;color:#d9e6ff;font-size:10px;padding:1px 12px 8px}
 .inventory-slot.gem-diamond{border-color:#c6b9a0}.inventory-slot.gem-sapphire{border-color:#6196d0}.inventory-slot.gem-emerald{border-color:#57a679}.inventory-slot.gem-ruby{border-color:#cf6b69}.inventory-slot.gem-onyx{border-color:#777987}.inventory-slot.gem-gold{border-color:#e2a927}
 @media(max-width:779px) and (orientation:landscape){.inventory-hud{min-height:70px;padding:5px 11px;gap:6px;border-width:3px;border-radius:31px 31px 14px 14px}.inventory-count{height:50px;flex-basis:54px}.inventory-grid{grid-template-rows:25px 25px;gap:1px 5px;padding:0 3px}.inventory-bonus-row,.inventory-gem-row{gap:5px}.inventory-slot{width:min(100%,27px);height:24px;border-width:1px;border-radius:6px}.circle-slot{width:min(100%,24px);height:24px;border-radius:50%}.inventory-slot i{font-size:6px}.inventory-slot b{font-size:9px}.inventory-hud::before,.inventory-hud::after{width:17px;height:17px}}
 @media(max-width:779px) and (orientation:portrait){.inventory-hud{min-height:90px;padding:8px 12px;gap:7px;border-radius:30px 30px 14px 14px}.inventory-count{height:60px;flex-basis:57px}.inventory-grid{grid-template-rows:30px 30px;gap:2px 4px;padding:0 2px}.inventory-bonus-row,.inventory-gem-row{gap:4px}.inventory-slot{width:min(100%,31px);height:29px}.circle-slot{width:min(100%,28px);height:28px}.inventory-slot i{font-size:7px}.inventory-slot b{font-size:11px}}
+
+/* Compact market tiles and remove the visible scrollbar beside the cards */
+.market{scrollbar-width:none}
+.market::-webkit-scrollbar{display:none;width:0;height:0}
+.market #market{min-height:0;gap:1px}
+.market .tier-title{flex:none}
+.market .cards{flex:none;grid-template-columns:repeat(4,minmax(0,148px));justify-content:center;gap:4px}
+.market .card{height:clamp(68px,10vh,96px);min-height:clamp(68px,10vh,96px);max-height:96px;padding:5px;gap:3px}
+@media(max-width:779px) and (orientation:landscape){
+ .market{overflow:hidden}
+ .market #market{height:100%;overflow:hidden;justify-content:space-evenly;gap:0}
+ .market .tier-title{min-height:14px;margin:1px 0;padding:1px 4px;font-size:7px}
+ .market .cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:2px}
+ .market .card{height:48px;min-height:48px;max-height:48px;padding:2px;gap:1px;border-radius:5px}
+ .market .card-top{min-height:13px}
+ .market .card-art{width:13px;height:13px;font-size:8px;border-radius:3px}
+ .market .card strong{font-size:6px;line-height:1}
+ .market .points{font-size:6px}
+ .market .cost{gap:1px}
+ .market .cost span{font-size:5px;padding:0 1px;line-height:1}
+ .market .card button{min-height:14px;height:14px;padding:0 2px;font-size:6px;line-height:1;border-width:1px;border-radius:4px}
+}
+@media(max-width:779px) and (orientation:portrait){
+ .market{scrollbar-width:none}
+ .market::-webkit-scrollbar{display:none;width:0}
+ .market .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .market .card{height:auto;min-height:104px;max-height:none}
+}
 </style></head>
 <body><header><small>A LITTLE STRATEGY GAME</small><h1>💎 宝石工坊</h1><p>收集宝石 · 建立商路 · 邀请好友一起成为珠宝商</p></header>
 <main><div class="bar"><div class="modes"><button data-mode="cpu">🤖 电脑对战</button><button class="secondary" data-mode="local">👥 本地多人</button><button class="secondary" data-mode="online">🌐 好友联机</button></div><label class="player-count-control">人数 <select id="playerCount" aria-label="选择玩家人数"><option value="2">2 人</option><option value="3">3 人</option><option value="4">4 人</option></select></label><button id="reset" class="secondary">重新开始</button></div>
