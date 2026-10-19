@@ -296,13 +296,23 @@ footer{text-align:center;color:#d9e6ff;font-size:10px;padding:1px 12px 8px}
  .noble strong{font-size:5px}.noble small{font-size:4px;margin-top:0}
  footer{height:7px}
 }
+
+/* Keep game feedback beside the market title without a separate status panel */
+@media(orientation:landscape){
+ .market>h2{display:grid;grid-template-columns:max-content max-content minmax(0,1fr);align-items:center;gap:clamp(3px,.7vw,9px)}
+ .market-status{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;color:#345742;font-size:clamp(5px,1.25vh,10px);font-weight:650}
+}
+@media(max-width:779px) and (orientation:portrait){
+ .market>h2{display:flex;flex-wrap:wrap}
+ .market-status{flex:1 0 100%;font-size:10px;color:#345742;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
 </style></head>
 <body><header><small>A LITTLE STRATEGY GAME</small><h1>💎 宝石工坊</h1><p>收集宝石 · 建立商路 · 邀请好友一起成为珠宝商</p></header>
 <main><div class="bar"><div class="modes"><button data-mode="cpu">🤖 电脑对战</button><button class="secondary" data-mode="local">👥 本地多人</button><button class="secondary" data-mode="online">🌐 好友联机</button></div><label class="player-count-control">人数 <select id="playerCount" aria-label="选择玩家人数"><option value="2">2 人</option><option value="3">3 人</option><option value="4">4 人</option></select></label><button id="reset" class="secondary">重新开始</button></div>
 <section id="onlinePanel" class="panel online hidden"><h2>好友联机 <span class="small">需要 Supabase 免费项目（设置见 README）</span></h2><p class="small">填写项目网址和 anon/public key；这是公开客户端密钥，可放在网页中。绝不要填写 service_role 密钥。</p><input id="supUrl" placeholder="Supabase Project URL，例如 https://xxxx.supabase.co"><input id="supKey" placeholder="Supabase anon / publishable key"><div class="action-row"><button id="saveConfig">保存连接设置</button><input id="roomCode" maxlength="8" placeholder="房间码（留空自动生成）" style="width:190px"><button id="createRoom" class="gold">创建房间</button><button id="joinRoom" class="secondary">加入房间</button></div><div class="small" id="onlineStatus">联机尚未连接。</div></section>
 <div class="layout">
 <aside class="player-rail panel"><h2>玩家信息</h2><div id="players" class="players"></div></aside>
-<section class="board-center"><div class="status" id="status" aria-live="polite"></div><section class="panel market"><h2>发展卡市场 <span class="small">由上至下：三级、二级、一级</span></h2><div id="market"></div></section><section class="inventory-hud" aria-label="物品栏"><div class="inventory-count"><strong id="gemTotal">0</strong><span>/10</span></div><div id="resources" class="inventory-grid"></div></section><div id="log" class="hidden"></div></section>
+<section class="board-center"><section class="panel market"><h2><span>发展卡市场</span><span class="small">由上至下：三级、二级、一级</span><span id="status" class="market-status" aria-live="polite">轮到你行动。</span></h2><div id="market"></div></section><section class="inventory-hud" aria-label="物品栏"><div class="inventory-count"><strong id="gemTotal">0</strong><span>/10</span></div><div id="resources" class="inventory-grid"></div></section><div id="log" class="hidden"></div></section>
 <aside class="right-rail"><section class="panel bank-panel"><h2>宝石供应 <span class="small">点选三种不同颜色</span></h2><div id="bankResources" class="bank-resources"></div><div id="selectedTray" class="selected-tray" aria-label="已选择的宝石"></div><div class="action-row"><button id="take" disabled>确认领取（0/3）</button></div></section><section class="panel noble-panel"><h2>贵族来访 <span class="small" id="nobleRule">3 位贵族</span></h2><div id="nobles" class="nobles"></div></section></aside>
 </div></main><footer>宝石工坊 · 独立制作的 Splendor 风格网页桌游</footer>
 <script>
